@@ -1,10 +1,16 @@
+/* eslint-disable ava/no-ignored-test-files */
 'use strict';
-module.exports = function (str, opts) {
-	if (typeof str !== 'string') {
-		throw new TypeError('Expected a string');
-	}
 
-	opts = opts || {};
+var test = require('ava');
+var RuleTester = require('eslint').RuleTester;
 
-	return str + ' & ' + (opts.postfix || 'rainbows');
+RuleTester.describe = function (text, method) {
+  RuleTester.it.validity = text;
+  return method.apply(this);
 };
+
+RuleTester.it = function (text, method) {
+  test(RuleTester.it.validity + ': ' + text, method);
+};
+
+module.exports = RuleTester;

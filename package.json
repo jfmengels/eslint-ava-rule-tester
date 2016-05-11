@@ -1,7 +1,7 @@
 {
   "name": "eslint-ava-rule-tester",
   "version": "0.0.0",
-  "description": "My stunning module",
+  "description": "ESLint RuleTester for AVA",
   "license": "MIT",
   "repository": "jfmengels/eslint-ava-rule-tester",
   "author": {
@@ -21,9 +21,14 @@
   "keywords": [
     ""
   ],
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "ava": "^0.14.0",
+    "eslint": "^2.9.0"
+  },
+  "devDependencies": {
     "xo": "^0.15.0"
+  },
+  "xo": {
+    "space": 2
   }
 }
