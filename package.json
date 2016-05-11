@@ -1,0 +1,29 @@
+{
+  "name": "eslint-ava-rule-tester",
+  "version": "0.0.0",
+  "description": "My stunning module",
+  "license": "MIT",
+  "repository": "jfmengels/eslint-ava-rule-tester",
+  "author": {
+    "name": "Jeroen Engels",
+    "email": "jfm.engels@gmail.com",
+    "url": "github.com/jfmengels"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "xo && ava"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    ""
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "ava": "^0.14.0",
+    "xo": "^0.15.0"
+  }
+}
