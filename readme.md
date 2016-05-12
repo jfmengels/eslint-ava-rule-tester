@@ -1,8 +1,8 @@
 # eslint-ava-rule-tester [![Build Status](https://travis-ci.org/jfmengels/eslint-ava-rule-tester.svg?branch=master)](https://travis-ci.org/jfmengels/eslint-ava-rule-tester)
 
-> ESLint RuleTester for AVA
+> [ESLint] RuleTester for [AVA]
 
-Allows you to run ESLint's RuleTester with AVA while still getting without getting
+Allows you to run [ESLint]'s RuleTester with [AVA] while still getting without getting
 
 ## Install
 
@@ -18,26 +18,29 @@ import RuleTester from 'eslint-ava-rule-tester';
 import rule from '../rules/my-awesome-rule';
 
 const ruleTester = new RuleTester({
-	env: {
-		es6: true
-	}
+  env: {
+    es6: true
+  }
 });
 
 ruleTester.run('my-awesome-rule', rule, {
-	valid: [
+  valid: [
     '...'
-	],
-	invalid: [
-		{
-			code: '...',
-			errors: ['...']
+  ],
+  invalid: [
+    {
+      code: '...',
+      errors: ['...']
     }
   ]
 });
 ```
 
-Run AVA with `--verbose` to get a better overview of which test failed.
+Run `ava --verbose` to get a better overview of which tests failed.
 
 ## License
 
 MIT © [Jeroen Engels](https://github.com/jfmengels)
+
+[AVA]: https://github.com/sindresorhus/ava
+[ESLint]: https://github.com/eslint/eslint
