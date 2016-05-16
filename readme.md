@@ -1,8 +1,8 @@
 # eslint-ava-rule-tester [![Build Status](https://travis-ci.org/jfmengels/eslint-ava-rule-tester.svg?branch=master)](https://travis-ci.org/jfmengels/eslint-ava-rule-tester)
 
-> [ESLint] RuleTester for [AVA]
+> [ESLint]'s RuleTester for [AVA]
 
-Allows you to run [ESLint]'s RuleTester with [AVA] while still getting without getting
+Allows you to run [ESLint]'s RuleTester with [AVA] while still getting the nice report it provides by default.
 
 ## Install
 
