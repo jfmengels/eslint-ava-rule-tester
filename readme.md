@@ -14,10 +14,11 @@ $ npm install --save-dev eslint-ava-rule-tester
 ## Usage
 
 ```js
-import RuleTester from 'eslint-ava-rule-tester';
+import test from 'ava';
+import avaRuleTester from 'eslint-ava-rule-tester';
 import rule from '../rules/my-awesome-rule';
 
-const ruleTester = new RuleTester({
+const ruleTester = new RuleTester(test, {
   env: {
     es6: true
   }
