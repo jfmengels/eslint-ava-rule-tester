@@ -1,4 +1,3 @@
-/* eslint-disable ava/no-ignored-test-files */
 'use strict';
 
 var RuleTester = require('eslint').RuleTester;

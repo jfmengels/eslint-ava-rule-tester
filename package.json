@@ -10,7 +10,7 @@
     "url": "github.com/jfmengels"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=4.0.0"
   },
   "scripts": {
     "test": "xo && ava"
@@ -19,10 +19,13 @@
     "index.js"
   ],
   "keywords": [
-    ""
+    "eslint",
+    "ava",
+    "test",
+    "rule"
   ],
   "dependencies": {
-    "eslint": "^2.11.1"
+    "eslint": "^3.0.1"
   },
   "devDependencies": {
     "ava": "^0.15.2",
