@@ -18,7 +18,7 @@ import test from 'ava';
 import avaRuleTester from 'eslint-ava-rule-tester';
 import rule from '../rules/my-awesome-rule';
 
-const ruleTester = new RuleTester(test, {
+const ruleTester = new avaRuleTester(test, {
   env: {
     es6: true
   }
