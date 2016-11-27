@@ -1,6 +1,25 @@
 'use strict';
 
-var RuleTester = require('eslint').RuleTester;
+const RuleTester = require('eslint').RuleTester;
+
+const isOnly = testCase => testCase && testCase.only;
+
+function filterOnly(test) {
+  if (!test) {
+    return test;
+  }
+  const onlyValid = (test.valid || []).filter(isOnly);
+  const onlyInvalid = (test.invalid || []).filter(isOnly);
+
+  if (onlyValid.length === 0 && onlyInvalid.length === 0) {
+    return test;
+  }
+
+  return Object.assign(test, {
+    valid: onlyValid,
+    invalid: onlyInvalid
+  });
+}
 
 module.exports = function (test, options) {
   RuleTester.describe = function (text, method) {
@@ -20,6 +39,12 @@ module.exports = function (test, options) {
         throw err;
       }
     });
+  };
+
+  const baseRun = RuleTester.prototype.run;
+
+  RuleTester.prototype.run = function (ruleName, rule, test) {
+    return baseRun.call(this, ruleName, rule, filterOnly(test));
   };
 
   return new RuleTester(options);
