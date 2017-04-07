@@ -9,7 +9,10 @@ module.exports = function (test, options) {
   };
 
   RuleTester.it = function (text, method) {
-    test(RuleTester.it.validity + ': ' + text, method);
+    test(RuleTester.it.validity + ': ' + text, function (t) {
+      t.pass();
+      method();
+    });
   };
 
   return new RuleTester(options);
