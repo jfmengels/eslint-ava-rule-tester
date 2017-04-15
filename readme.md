@@ -30,8 +30,9 @@ ruleTester.run('my-awesome-rule', rule, {
   ],
   invalid: [
     {
-      code: '...',
-      errors: ['...']
+      code: 'console.lgo',
+      errors: [ { message: 'You mistyped console.log', column: 1, line: 1 } ],
+      output: 'console.log' // Optional, use this when your rule fixes the errors
     }
   ]
 });
