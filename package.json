@@ -1,6 +1,6 @@
 {
   "name": "eslint-ava-rule-tester",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "ESLint RuleTester for AVA",
   "license": "MIT",
   "repository": "jfmengels/eslint-ava-rule-tester",
