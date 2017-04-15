@@ -11,7 +11,14 @@ module.exports = function (test, options) {
   RuleTester.it = function (text, method) {
     test(RuleTester.it.validity + ': ' + text, function (t) {
       t.pass();
-      method();
+      try {
+        method();
+      } catch (err) {
+        if (err.message.indexOf('Output is incorrect') !== -1) {
+          err.message += `\n\nActual:\n${err.actual}\n\nExpected:\n${err.expected}`;
+        }
+        throw err;
+      }
     });
   };
 
