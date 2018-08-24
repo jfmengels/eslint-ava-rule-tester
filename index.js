@@ -3,19 +3,21 @@
 const RuleTester = require('eslint').RuleTester;
 
 const isOnly = testCase => testCase && testCase.only;
+const hasOnly = testCases =>
+  (testCases.valid || []).some(isOnly) || (testCases.invalid || []).some(isOnly);
 
-function filterOnly(test) {
-  if (!test) {
-    return test;
+function filterOnly(testCase) {
+  if (!testCase) {
+    return testCase;
   }
-  const onlyValid = (test.valid || []).filter(isOnly);
-  const onlyInvalid = (test.invalid || []).filter(isOnly);
+  const onlyValid = (testCase.valid || []).filter(isOnly);
+  const onlyInvalid = (testCase.invalid || []).filter(isOnly);
 
   if (onlyValid.length === 0 && onlyInvalid.length === 0) {
-    return test;
+    return testCase;
   }
 
-  return Object.assign(test, {
+  return Object.assign(testCase, {
     valid: onlyValid,
     invalid: onlyInvalid
   });
@@ -28,7 +30,9 @@ module.exports = function (test, options) {
   };
 
   RuleTester.it = function (text, method) {
-    test(RuleTester.it.validity + ': ' + text, function (t) {
+    console.log(text)
+    const testMethod = this.hasOnly ? test.only.bind(test) : test;
+    testMethod(RuleTester.it.validity + ': ' + text, function (t) {
       t.pass();
       try {
         method();
@@ -43,8 +47,9 @@ module.exports = function (test, options) {
 
   const baseRun = RuleTester.prototype.run;
 
-  RuleTester.prototype.run = function (ruleName, rule, test) {
-    return baseRun.call(this, ruleName, rule, filterOnly(test));
+  RuleTester.prototype.run = function (ruleName, rule, testSuite) {
+    this.useOnly = hasOnly(testSuite);
+    return baseRun.call(this, ruleName, rule, filterOnly(testSuite));
   };
 
   return new RuleTester(options);
