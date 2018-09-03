@@ -1,15 +1,28 @@
 'use strict';
 
-var RuleTester = require('eslint').RuleTester;
+const {RuleTester} = require('eslint');
+
+const nameGetter = () => {
+  const state = new Map();
+  return name => {
+    const n = state.get(name) || 0;
+    state.set(name, n + 1);
+    return n ? `${name} v${n + 1}` : name;
+  };
+};
 
 module.exports = function (test, options) {
+  let validity;
+  const getName = nameGetter();
+
   RuleTester.describe = function (text, method) {
-    RuleTester.it.validity = text;
+    validity = text;
     return method.apply(this);
   };
 
   RuleTester.it = function (text, method) {
-    test(RuleTester.it.validity + ': ' + text, function (t) {
+    const name = getName(`${validity}: ${text}`);
+    test(name, t => {
       t.pass();
       try {
         method();
