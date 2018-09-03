@@ -45,7 +45,8 @@ test('works', t => {
       },
       {
         code: '()=> {}',
-        errors: ['spam']
+        errors: ['Missing space before =>.'],
+        output: 'spam'
       }
     ]
   });
@@ -94,7 +95,7 @@ test('works', t => {
       ctx: undefined,
       title: 'invalid: ()=> {} v2',
       result: {
-        failure: getMessage('Missing space before =>.', 'spam')
+        failure: 'Output is incorrect.\n\nActual:\n() => {}\n\nExpected:\nspam'
       },
       testCalls: [[true]],
       rest: []
