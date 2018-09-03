@@ -1,3 +1,4 @@
+import assert from 'assert';
 import test from 'ava';
 import arrowSpacing from 'eslint/lib/rules/arrow-spacing';
 
@@ -8,6 +9,14 @@ const try_ = fn => {
     return {success: fn()};
   } catch (e) {
     return {failure: e.message};
+  }
+};
+
+const getMessage = (expected, actual) => {
+  try {
+    assert.strictEqual(expected, actual);
+  } catch (e) {
+    return e.message;
   }
 };
 
@@ -76,10 +85,7 @@ test('works', t => {
       ctx: undefined,
       title: 'invalid: ()=> {}',
       result: {
-        failure:
-          'Input A expected to strictly equal input B:\n\u001B[32m+ expected' +
-          '\u001B[39m \u001B[31m- actual\u001B[39m\n\n\u001B[31m-\u001B[39m ' +
-          '\'Missing space before =>.\'\n\u001B[32m+\u001B[39m \'ham\''
+        failure: getMessage('Missing space before =>.', 'ham')
       },
       testCalls: [[true]],
       rest: []
@@ -88,10 +94,7 @@ test('works', t => {
       ctx: undefined,
       title: 'invalid: ()=> {} v2',
       result: {
-        failure:
-          'Input A expected to strictly equal input B:\n\u001B[32m+ expected' +
-          '\u001B[39m \u001B[31m- actual\u001B[39m\n\n\u001B[31m-\u001B[39m ' +
-          '\'Missing space before =>.\'\n\u001B[32m+\u001B[39m \'spam\''
+        failure: getMessage('Missing space before =>.', 'spam')
       },
       testCalls: [[true]],
       rest: []
