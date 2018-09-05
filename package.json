@@ -24,10 +24,11 @@
     "test",
     "rule"
   ],
-  "dependencies": {
+  "peerDependencies": {
     "eslint": "^5.5.0"
   },
   "devDependencies": {
+    "eslint": "^5.5.0",
     "ava": "^1.0.0-beta.8",
     "xo": "^0.22.0"
   },
