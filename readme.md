@@ -13,7 +13,7 @@ $ npm install --save-dev eslint-ava-rule-tester
 
 ## Usage
 
-Apart from how it is instanciated, the API is the same as [ESLint]'s [RuleTester]. For information on how to test your rule, please follow the [official documentation](http://eslint.org/docs/developer-guide/working-with-plugins#testing).
+Apart from how it is instantiated, the API is the same as [ESLint]'s [RuleTester]. For information on how to test your rule, please follow the [official documentation](http://eslint.org/docs/developer-guide/working-with-plugins#testing).
 
 ```js
 import test from 'ava';
