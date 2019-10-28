@@ -28,9 +28,9 @@
     "eslint": "^5.5.0"
   },
   "devDependencies": {
-    "eslint": "^5.5.0",
-    "ava": "^1.0.0-beta.8",
-    "xo": "^0.22.0"
+    "eslint": "^6.6.0",
+    "ava": "^2.4.0",
+    "xo": "^0.25.3"
   },
   "xo": {
     "space": 2
