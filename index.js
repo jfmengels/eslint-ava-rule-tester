@@ -26,11 +26,12 @@ module.exports = function (test, options) {
       t.pass();
       try {
         method();
-      } catch (err) {
-        if (err.message.indexOf('Output is incorrect') !== -1) {
-          err.message += `\n\nActual:\n${err.actual}\n\nExpected:\n${err.expected}`;
+      } catch (error) {
+        if (error.message.includes('Output is incorrect')) {
+          error.message += `\n\nActual:\n${error.actual}\n\nExpected:\n${error.expected}`;
         }
-        throw err;
+
+        throw error;
       }
     });
   };
