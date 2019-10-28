@@ -7,16 +7,16 @@ import avaRuleTester from '.';
 const try_ = fn => {
   try {
     return {success: fn()};
-  } catch (e) {
-    return {failure: e.message};
+  } catch (error) {
+    return {failure: error.message};
   }
 };
 
 const getMessage = (expected, actual) => {
   try {
     assert.strictEqual(expected, actual);
-  } catch (e) {
-    return e.message;
+  } catch (error) {
+    return error.message;
   }
 };
 
