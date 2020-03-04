@@ -26,14 +26,17 @@
     "rule"
   ],
   "peerDependencies": {
-    "eslint": ">=5.5.0"
+    "eslint": ">=6.8.0"
   },
   "devDependencies": {
-    "eslint": "^6.6.0",
     "ava": "^2.4.0",
-    "xo": "^0.25.3"
+    "eslint": "^6.6.0",
+    "xo": "^0.27.2"
   },
   "xo": {
     "space": 2
+  },
+  "dependencies": {
+    "minimist": "^1.2.0"
   }
 }

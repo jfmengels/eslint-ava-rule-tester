@@ -104,3 +104,161 @@ test('works', t => {
 
   t.deepEqual(result, expected);
 });
+
+test('works with `only`', t => {
+  t.plan(1);
+  const calls = [];
+  function doTest(...args) {
+    calls.push([this, ...args]);
+  }
+
+  const ruleTester = avaRuleTester(doTest, {
+    args: {
+      rules: 'eg-rule'
+    },
+    parserOptions: {
+      ecmaVersion: '2018'
+    }
+  });
+
+  ruleTester.run('eg-rule', arrowSpacing, {
+    valid: [
+      '() => {}',
+      '() => {}'
+    ],
+    invalid: [
+      {
+        code: '()=> {}',
+        only: true,
+        errors: ['ham']
+      },
+      {
+        code: '()=> {}',
+        errors: ['Missing space before =>.'],
+        output: 'spam'
+      },
+      {
+        code: '() =>{}',
+        only: true,
+        errors: ['ham']
+      }
+    ]
+  });
+
+  const result = calls.map(([ctx, title, fn, ...rest]) => {
+    const testCalls = [];
+    const testObject = {
+      pass(...args) {
+        testCalls.push([this === testObject, ...args]);
+      }
+    };
+    return {
+      ctx,
+      title,
+      result: try_(() => fn(testObject)),
+      testCalls,
+      rest
+    };
+  });
+
+  const expected = [
+    {
+      ctx: undefined,
+      title: 'invalid: ()=> {}',
+      result: {
+        failure: getMessage('Missing space before =>.', 'ham')
+      },
+      testCalls: [[true]],
+      rest: []
+    },
+    {
+      ctx: undefined,
+      title: 'invalid: () =>{}',
+      result: {
+        failure: getMessage('Missing space after =>.', 'ham')
+      },
+      testCalls: [[true]],
+      rest: []
+    }
+  ];
+
+  t.deepEqual(result, expected);
+});
+
+test('works with `invalid` and `valid`', t => {
+  t.plan(1);
+  const calls = [];
+  function doTest(...args) {
+    calls.push([this, ...args]);
+  }
+
+  const ruleTester = avaRuleTester(doTest, {
+    args: {
+      rules: 'eg-rule',
+      valid: '0',
+      invalid: '-1'
+    },
+    parserOptions: {
+      ecmaVersion: '2018'
+    }
+  });
+
+  ruleTester.run('eg-rule', arrowSpacing, {
+    valid: [
+      '() => {}',
+      '() => {}'
+    ],
+    invalid: [
+      {
+        code: '()=> {}',
+        errors: ['ham']
+      },
+      {
+        code: '()=> {}',
+        errors: ['Missing space before =>.'],
+        output: 'spam'
+      },
+      {
+        code: '() =>{}',
+        errors: ['ham']
+      }
+    ]
+  });
+
+  const result = calls.map(([ctx, title, fn, ...rest]) => {
+    const testCalls = [];
+    const testObject = {
+      pass(...args) {
+        testCalls.push([this === testObject, ...args]);
+      }
+    };
+    return {
+      ctx,
+      title,
+      result: try_(() => fn(testObject)),
+      testCalls,
+      rest
+    };
+  });
+
+  const expected = [
+    {
+      ctx: undefined,
+      title: 'valid: () => {}',
+      result: {success: undefined},
+      testCalls: [[true]],
+      rest: []
+    },
+    {
+      ctx: undefined,
+      title: 'invalid: () =>{}',
+      result: {
+        failure: getMessage('Missing space after =>.', 'ham')
+      },
+      testCalls: [[true]],
+      rest: []
+    }
+  ];
+
+  t.deepEqual(result, expected);
+});
