@@ -21,11 +21,16 @@ const getMessage = (expected, actual) => {
 };
 
 test('works', t => {
-  t.plan(1);
+  t.plan(2);
   const calls = [];
+  const onlyCalls = [];
   function doTest(...args) {
     calls.push([this, ...args]);
   }
+
+  doTest.only = function (...args) {
+    onlyCalls.push([this, ...args]);
+  };
 
   const ruleTester = avaRuleTester(doTest, {
     parserOptions: {
@@ -50,6 +55,8 @@ test('works', t => {
       }
     ]
   });
+
+  t.deepEqual(onlyCalls, []);
 
   const result = calls.map(([ctx, title, fn, ...rest]) => {
     const testCalls = [];
@@ -103,4 +110,57 @@ test('works', t => {
   ];
 
   t.deepEqual(result, expected);
+});
+
+test('only', t => {
+  const calls = [];
+  const onlyCalls = [];
+  function doTest(...args) {
+    calls.push([this, ...args]);
+  }
+
+  doTest.only = function (...args) {
+    onlyCalls.push([this, ...args]);
+  };
+
+  const ruleTester = avaRuleTester(doTest, {
+    parserOptions: {
+      ecmaVersion: '2018'
+    }
+  });
+
+  ruleTester.run('eg-rule', arrowSpacing, {
+    valid: [
+      '() => {}',
+      '() => {}'
+    ],
+    invalid: [
+      {
+        code: '()=> {}',
+        errors: ['ham']
+      },
+      {
+        code: '()=> {}',
+        errors: ['Missing space before =>.'],
+        output: 'spam',
+        only: true
+      }
+    ]
+  });
+
+  t.is(calls.length, 3);
+  t.is(onlyCalls.length, 1);
+  const [, title, fn] = onlyCalls[0];
+  t.is(title, 'invalid: ()=> {} v2');
+
+  const result = try_(() => fn({pass() {}}));
+  t.deepEqual(result, {failure: `
+Output is incorrect.
+
+Actual:
+() => {}
+
+Expected:
+spam
+`.trim()});
 });

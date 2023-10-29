@@ -20,9 +20,9 @@ module.exports = function (test, options) {
     return method.apply(this);
   };
 
-  RuleTester.it = function (text, method) {
+  const run = isOnly => function (text, method) {
     const name = getName(`${validity}: ${text}`);
-    test(name, t => {
+    (isOnly ? test.only : test)(name, t => {
       t.pass();
       try {
         method();
@@ -35,6 +35,9 @@ module.exports = function (test, options) {
       }
     });
   };
+
+  RuleTester.it = run(false);
+  RuleTester.itOnly = run(true);
 
   return new RuleTester(options);
 };
