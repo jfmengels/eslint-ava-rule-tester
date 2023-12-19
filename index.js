@@ -2,27 +2,19 @@
 
 const {RuleTester} = require('eslint');
 
-const nameGetter = () => {
-  const state = new Map();
-  return name => {
-    const n = state.get(name) || 0;
-    state.set(name, n + 1);
-    return n ? `${name} v${n + 1}` : name;
-  };
-};
-
 module.exports = function (test, options) {
   let validity;
-  const getName = nameGetter();
+  let indexes = {};
 
   RuleTester.describe = function (text, method) {
     validity = text;
     return method.apply(this);
   };
 
-  const run = isOnly => function (text, method) {
-    const name = getName(`${validity}: ${text}`);
-    (isOnly ? test.only : test)(name, t => {
+  const run = testFunction => function (text, method) {
+    indexes[validity] ??= 0;
+    const name = `${validity}(${++indexes[validity]}): ${text}`;
+    testFunction(name, t => {
       t.pass();
       try {
         method();
@@ -36,8 +28,8 @@ module.exports = function (test, options) {
     });
   };
 
-  RuleTester.it = run(false);
-  RuleTester.itOnly = run(true);
+  RuleTester.it = run(test);
+  RuleTester.itOnly = run(test.only);
 
   return new RuleTester(options);
 };

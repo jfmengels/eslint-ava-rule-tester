@@ -77,21 +77,21 @@ test('works', t => {
   const expected = [
     {
       ctx: undefined,
-      title: 'valid: () => {}',
+      title: 'valid(1): () => {}',
       result: {success: undefined},
       testCalls: [[true]],
       rest: []
     },
     {
       ctx: undefined,
-      title: 'valid: () => {} v2',
+      title: 'valid(2): () => {}',
       result: {success: undefined},
       testCalls: [[true]],
       rest: []
     },
     {
       ctx: undefined,
-      title: 'invalid: ()=> {}',
+      title: 'invalid(1): ()=> {}',
       result: {
         failure: getMessage('Missing space before =>.', 'ham')
       },
@@ -100,7 +100,7 @@ test('works', t => {
     },
     {
       ctx: undefined,
-      title: 'invalid: ()=> {} v2',
+      title: 'invalid(2): ()=> {}',
       result: {
         failure: 'Output is incorrect.\n\nActual:\n() => {}\n\nExpected:\nspam'
       },
@@ -151,7 +151,7 @@ test('only', t => {
   t.is(calls.length, 3);
   t.is(onlyCalls.length, 1);
   const [, title, fn] = onlyCalls[0];
-  t.is(title, 'invalid: ()=> {} v2');
+  t.is(title, 'invalid(2): ()=> {}');
 
   const result = try_(() => fn({pass() {}}));
   t.deepEqual(result, {failure: `
