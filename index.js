@@ -4,7 +4,7 @@ const {RuleTester} = require('eslint');
 
 module.exports = function (test, options) {
   let validity;
-  let indexes = {};
+  const indices = {};
 
   RuleTester.describe = function (text, method) {
     validity = text;
@@ -12,8 +12,12 @@ module.exports = function (test, options) {
   };
 
   const run = testFunction => function (text, method) {
-    indexes[validity] ??= 0;
-    const name = `${validity}(${++indexes[validity]}): ${text}`;
+    // TODO: When targeting Node.js 20.
+    // indices[validity] ??= 0;
+
+    indices[validity] = indices[validity] || 0;
+
+    const name = `${validity}(${++indices[validity]}): ${text}`;
     testFunction(name, t => {
       t.pass();
       try {
