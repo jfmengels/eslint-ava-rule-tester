@@ -2,7 +2,6 @@
 
 const {RuleTester} = require('eslint');
 
-
 module.exports = function (test, options) {
   let validity;
   const indices = {};
