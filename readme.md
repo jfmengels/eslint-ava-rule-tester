@@ -48,4 +48,4 @@ MIT © [Jeroen Engels](https://github.com/jfmengels)
 
 [AVA]: https://github.com/sindresorhus/ava
 [ESLint]: https://github.com/eslint/eslint
-[RuleTester]: (http://eslint.org/docs/developer-guide/working-with-plugins#testing)
+[RuleTester]: (https://eslint.org/docs/latest/integrate/nodejs-api#ruletester)

@@ -2,14 +2,10 @@
 
 const {RuleTester} = require('eslint');
 
+
 module.exports = function (test, options) {
   let validity;
   const indices = {};
-
-  RuleTester.describe = function (text, method) {
-    validity = text;
-    return method.apply(this);
-  };
 
   const run = testFunction => function (text, method) {
     // TODO: When targeting Node.js 20.
@@ -32,8 +28,25 @@ module.exports = function (test, options) {
     });
   };
 
-  RuleTester.it = run(test);
-  RuleTester.itOnly = run(test.only);
+  class AvaRuleTester extends RuleTester {
 
-  return new RuleTester(options);
+    constructor(testConfig) {
+      super(testConfig);
+    }
+
+    static describe(text, method) {
+      validity = text;
+      return method.apply(this);
+    }
+
+    static get it() {
+      return run(test);
+    }
+
+    static get itOnly() {
+      return run(test.only);
+    }
+  }
+
+  return new AvaRuleTester(options);
 };
