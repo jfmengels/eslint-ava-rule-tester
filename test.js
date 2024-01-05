@@ -1,8 +1,11 @@
 import assert from 'assert';
 import test from 'ava';
-import arrowSpacing from 'eslint/lib/rules/arrow-spacing';
+import eslintExperimentalApis from 'eslint/use-at-your-own-risk';
 
 import avaRuleTester from '.';
+
+// TODO[@fisker]: Write a simple rule instead.
+const arrowSpacing = eslintExperimentalApis.builtinRules.get('arrow-spacing');
 
 const try_ = fn => {
   try {
