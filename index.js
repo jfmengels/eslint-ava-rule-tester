@@ -1,8 +1,6 @@
-'use strict';
+import {RuleTester} from 'eslint';
 
-const {RuleTester} = require('eslint');
-
-module.exports = function (test, options) {
+export default function (test, options) {
   let validity;
   const indices = {};
 
@@ -19,12 +17,12 @@ module.exports = function (test, options) {
 
     const name = `${validity}(${++indices[validity]}): ${text}`;
     testFunction(name, t => {
-      t.pass();
       try {
         method();
+        t.pass();
       } catch (error) {
-        if (error.message.includes('Output is incorrect')) {
-          error.message += `\n\nActual:\n${error.actual}\n\nExpected:\n${error.expected}`;
+        if (error.code === 'ERR_ASSERTION' && error.operator === 'strictEqual') {
+          t.is(error.actual, error.expected, error.message);
         }
 
         throw error;

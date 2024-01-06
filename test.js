@@ -1,8 +1,11 @@
 import assert from 'assert';
 import test from 'ava';
-import arrowSpacing from 'eslint/lib/rules/arrow-spacing';
+import eslintExperimentalApis from 'eslint/use-at-your-own-risk';
+import {outdent} from 'outdent';
 
-import avaRuleTester from '.';
+import avaRuleTester from './index.js';
+
+const arrowSpacing = eslintExperimentalApis.builtinRules.get('arrow-spacing');
 
 const try_ = fn => {
   try {
@@ -62,8 +65,11 @@ test('works', t => {
     const testCalls = [];
     const testObject = {
       pass(...args) {
-        testCalls.push([this === testObject, ...args]);
-      }
+        testCalls.push(['t.pass', ...args]);
+      },
+      is(...args) {
+        testCalls.push(['t.is', ...args]);
+      },
     };
     return {
       ctx,
@@ -73,20 +79,19 @@ test('works', t => {
       rest
     };
   });
-
   const expected = [
     {
       ctx: undefined,
       title: 'valid(1): () => {}',
       result: {success: undefined},
-      testCalls: [[true]],
+      testCalls: [['t.pass']],
       rest: []
     },
     {
       ctx: undefined,
       title: 'valid(2): () => {}',
       result: {success: undefined},
-      testCalls: [[true]],
+      testCalls: [['t.pass']],
       rest: []
     },
     {
@@ -95,16 +100,36 @@ test('works', t => {
       result: {
         failure: getMessage('Missing space before =>.', 'ham')
       },
-      testCalls: [[true]],
+      testCalls: [
+        [
+          't.is',
+          'Missing space before =>.',
+          'ham',
+          outdent`
+            Expected values to be strictly equal:
+            + actual - expected
+
+            + 'Missing space before =>.'
+            - 'ham'
+          `,
+        ]
+      ],
       rest: []
     },
     {
       ctx: undefined,
       title: 'invalid(2): ()=> {}',
       result: {
-        failure: 'Output is incorrect.\n\nActual:\n() => {}\n\nExpected:\nspam'
+        failure: 'Output is incorrect.'
       },
-      testCalls: [[true]],
+      testCalls: [
+        [
+          't.is',
+          '() => {}',
+          'spam',
+          'Output is incorrect.',
+        ]
+      ],
       rest: []
     }
   ];
@@ -153,14 +178,21 @@ test('only', t => {
   const [, title, fn] = onlyCalls[0];
   t.is(title, 'invalid(2): ()=> {}');
 
-  const result = try_(() => fn({pass() {}}));
-  t.deepEqual(result, {failure: `
-Output is incorrect.
-
-Actual:
-() => {}
-
-Expected:
-spam
-`.trim()});
+  const testCalls = []
+  try_(() => fn({
+    pass(...args) {
+      testCalls.push(['t.pass', ...args]);
+    },
+    is(...args) {
+      testCalls.push(['t.is', ...args]);
+    },
+  }));
+  t.deepEqual(testCalls, [
+    [
+      't.is',
+      '() => {}',
+      'spam',
+      'Output is incorrect.',
+    ]
+  ]);
 });

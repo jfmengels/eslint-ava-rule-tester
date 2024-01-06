@@ -10,8 +10,9 @@
     "url": "https://github.com/jfmengels"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=18"
   },
+  "type": "module",
   "scripts": {
     "lint": "xo",
     "test": "xo && ava"
@@ -26,12 +27,14 @@
     "rule"
   ],
   "peerDependencies": {
-    "eslint": ">=5.5.0"
+    "eslint": ">=8.7.0"
   },
   "devDependencies": {
-    "ava": "^2.4.0",
-    "eslint": "^7.29.0",
-    "xo": "^0.25.3"
+    "ava": "^6.0.1",
+    "eslint": "^8.56.0",
+    "outdent": "^0.8.0",
+    "strip-ansi": "^7.1.0",
+    "xo": "^0.56.0"
   },
   "xo": {
     "space": 2
