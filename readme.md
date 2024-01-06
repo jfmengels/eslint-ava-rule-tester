@@ -17,10 +17,10 @@ Apart from how it is instantiated, the API is the same as [ESLint]'s [RuleTester
 
 ```js
 import test from 'ava';
-import avaRuleTester from 'eslint-ava-rule-tester';
+import AvaRuleTester from 'eslint-ava-rule-tester';
 import rule from '../rules/my-awesome-rule';
 
-const ruleTester = new avaRuleTester(test, {
+const ruleTester = new AvaRuleTester(test, {
   env: {
     es6: true
   }
@@ -48,4 +48,4 @@ MIT © [Jeroen Engels](https://github.com/jfmengels)
 
 [AVA]: https://github.com/sindresorhus/ava
 [ESLint]: https://github.com/eslint/eslint
-[RuleTester]: (http://eslint.org/docs/developer-guide/working-with-plugins#testing)
+[RuleTester]: (https://eslint.org/docs/latest/integrate/nodejs-api#ruletester)
