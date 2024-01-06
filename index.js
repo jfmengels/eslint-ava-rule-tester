@@ -2,50 +2,55 @@
 
 const {RuleTester} = require('eslint');
 
-module.exports = function (test, options) {
-  let validity;
-  const indices = {};
+const generateUniqueName = (testCase, scenarioType, index) => {
+  testCase = typeof testCase === 'string' ? {code: testCase} : {...testCase};
+  testCase.name = `${scenarioType}(${index + 1}): ${testCase.name ?? testCase.code}`;
+  return testCase;
+};
 
-  const run = testFunction => function (text, method) {
-    // TODO: When targeting Node.js 20.
-    // indices[validity] ??= 0;
+const normalizeTestCases = (tests) => {
+  const normalized = {...tests};
 
-    indices[validity] = indices[validity] || 0;
-
-    const name = `${validity}(${++indices[validity]}): ${text}`;
-    testFunction(name, t => {
-      t.pass();
-      try {
-        method();
-      } catch (error) {
-        if (error.message.includes('Output is incorrect')) {
-          error.message += `\n\nActual:\n${error.actual}\n\nExpected:\n${error.expected}`;
-        }
-
-        throw error;
-      }
-    });
-  };
-
-  class AvaRuleTester extends RuleTester {
-
-    constructor(testConfig) {
-      super(testConfig);
+  for (const scenarioType of ['valid', 'invalid']) {
+    // https://github.com/eslint/eslint/blob/95075251fb3ce35aaf7eadbd1d0a737106c13ec6/lib/rule-tester/rule-tester.js#L510
+    if (!normalized[scenarioType]) {
+      throw new Error(`Could not find any ${scenarioType} test scenarios`);
     }
 
-    static describe(text, method) {
-      validity = text;
-      return method.apply(this);
-    }
-
-    static get it() {
-      return run(test);
-    }
-
-    static get itOnly() {
-      return run(test.only);
-    }
+    normalized[scenarioType] = normalized[scenarioType].map((testCase, index) => generateUniqueName(testCase, scenarioType, index));
   }
 
-  return new AvaRuleTester(options);
+  return normalized;
+}
+
+const run = testFunction => (title, method) => {
+  testFunction(title, t => {
+    t.pass();
+
+    try {
+      method();
+    } catch (error) {
+      if (error.message.includes('Output is incorrect')) {
+        error.message += `\n\nActual:\n${error.actual}\n\nExpected:\n${error.expected}`;
+        // TODO: Use `t.is()`
+      }
+
+      throw error;
+    }
+  });
 };
+
+class AvaRuleTester extends RuleTester {
+  constructor(test, config) {
+    super(config);
+
+    AvaRuleTester.it = run(test);
+    AvaRuleTester.itOnly = run(test.only);
+  }
+
+  run(name, rule, tests) {
+    return RuleTester.prototype.run.call(this, name, rule, normalizeTestCases(tests));
+  }
+}
+
+module.exports = AvaRuleTester;

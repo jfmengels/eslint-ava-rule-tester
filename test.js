@@ -2,7 +2,7 @@ import assert from 'assert';
 import test from 'ava';
 import eslintExperimentalApis from 'eslint/use-at-your-own-risk';
 
-import avaRuleTester from '.';
+import AvaRuleTester from '.';
 
 // TODO[@fisker]: Write a simple rule instead.
 const arrowSpacing = eslintExperimentalApis.builtinRules.get('arrow-spacing');
@@ -35,7 +35,7 @@ test('works', t => {
     onlyCalls.push([this, ...args]);
   };
 
-  const ruleTester = avaRuleTester(doTest, {
+  const ruleTester = new AvaRuleTester(doTest, {
     parserOptions: {
       ecmaVersion: '2018'
     }
@@ -126,7 +126,7 @@ test('only', t => {
     onlyCalls.push([this, ...args]);
   };
 
-  const ruleTester = avaRuleTester(doTest, {
+  const ruleTester = new AvaRuleTester(doTest, {
     parserOptions: {
       ecmaVersion: '2018'
     }
