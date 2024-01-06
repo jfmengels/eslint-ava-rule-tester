@@ -1,8 +1,7 @@
-import assert from 'assert';
+import assert from 'node:assert';
 import test from 'ava';
 import eslintExperimentalApis from 'eslint/use-at-your-own-risk';
 import {outdent} from 'outdent';
-
 import avaRuleTester from './index.js';
 
 const arrowSpacing = eslintExperimentalApis.builtinRules.get('arrow-spacing');
@@ -37,26 +36,26 @@ test('works', t => {
 
   const ruleTester = avaRuleTester(doTest, {
     parserOptions: {
-      ecmaVersion: '2018'
-    }
+      ecmaVersion: '2018',
+    },
   });
 
   ruleTester.run('eg-rule', arrowSpacing, {
     valid: [
       '() => {}',
-      '() => {}'
+      '() => {}',
     ],
     invalid: [
       {
         code: '()=> {}',
-        errors: ['ham']
+        errors: ['ham'],
       },
       {
         code: '()=> {}',
         errors: ['Missing space before =>.'],
-        output: 'spam'
-      }
-    ]
+        output: 'spam',
+      },
+    ],
   });
 
   t.deepEqual(onlyCalls, []);
@@ -76,7 +75,7 @@ test('works', t => {
       title,
       result: try_(() => fn(testObject)),
       testCalls,
-      rest
+      rest,
     };
   });
   const expected = [
@@ -85,20 +84,20 @@ test('works', t => {
       title: 'valid(1): () => {}',
       result: {success: undefined},
       testCalls: [['t.pass']],
-      rest: []
+      rest: [],
     },
     {
       ctx: undefined,
       title: 'valid(2): () => {}',
       result: {success: undefined},
       testCalls: [['t.pass']],
-      rest: []
+      rest: [],
     },
     {
       ctx: undefined,
       title: 'invalid(1): ()=> {}',
       result: {
-        failure: getMessage('Missing space before =>.', 'ham')
+        failure: getMessage('Missing space before =>.', 'ham'),
       },
       testCalls: [
         [
@@ -112,15 +111,15 @@ test('works', t => {
             + 'Missing space before =>.'
             - 'ham'
           `,
-        ]
+        ],
       ],
-      rest: []
+      rest: [],
     },
     {
       ctx: undefined,
       title: 'invalid(2): ()=> {}',
       result: {
-        failure: 'Output is incorrect.'
+        failure: 'Output is incorrect.',
       },
       testCalls: [
         [
@@ -128,10 +127,10 @@ test('works', t => {
           '() => {}',
           'spam',
           'Output is incorrect.',
-        ]
+        ],
       ],
-      rest: []
-    }
+      rest: [],
+    },
   ];
 
   t.deepEqual(result, expected);
@@ -150,27 +149,27 @@ test('only', t => {
 
   const ruleTester = avaRuleTester(doTest, {
     parserOptions: {
-      ecmaVersion: '2018'
-    }
+      ecmaVersion: '2018',
+    },
   });
 
   ruleTester.run('eg-rule', arrowSpacing, {
     valid: [
       '() => {}',
-      '() => {}'
+      '() => {}',
     ],
     invalid: [
       {
         code: '()=> {}',
-        errors: ['ham']
+        errors: ['ham'],
       },
       {
         code: '()=> {}',
         errors: ['Missing space before =>.'],
         output: 'spam',
-        only: true
-      }
-    ]
+        only: true,
+      },
+    ],
   });
 
   t.is(calls.length, 3);
@@ -178,7 +177,7 @@ test('only', t => {
   const [, title, fn] = onlyCalls[0];
   t.is(title, 'invalid(2): ()=> {}');
 
-  const testCalls = []
+  const testCalls = [];
   try_(() => fn({
     pass(...args) {
       testCalls.push(['t.pass', ...args]);
@@ -193,6 +192,6 @@ test('only', t => {
       '() => {}',
       'spam',
       'Output is incorrect.',
-    ]
+    ],
   ]);
 });

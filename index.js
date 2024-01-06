@@ -1,6 +1,6 @@
 import {RuleTester} from 'eslint';
 
-export default function (test, options) {
+export default function avaEslintRuleTester(test, options) {
   let validity;
   const indices = {};
 
@@ -34,4 +34,4 @@ export default function (test, options) {
   RuleTester.itOnly = run(test.only);
 
   return new RuleTester(options);
-};
+}
