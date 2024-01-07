@@ -6,7 +6,7 @@ import AvaRuleTester from './index.js';
 const examplePlugin = {
   rules: {
     'bad-to-good': {
-      create: (context) => ({
+      create: context => ({
         Identifier(node) {
           if (node.name === 'bad') {
             context.report({
@@ -69,7 +69,7 @@ test('works', t => {
         errors: [{message: '"bad" should be named "good"'}],
         output: 'incorrect output assert',
       },
-    ]
+    ],
   });
 
   t.deepEqual(onlyCalls, []);
@@ -111,7 +111,7 @@ test('works', t => {
       ctx: undefined,
       title: 'invalid(1): bad',
       result: {
-        failure: getMessage('"bad" should be named "good"', 'incorrect error message assert')
+        failure: getMessage('"bad" should be named "good"', 'incorrect error message assert'),
       },
       testCalls: [
         [
@@ -179,7 +179,7 @@ test('only', t => {
         output: 'incorrect output assert',
         only: true,
       },
-    ]
+    ],
   });
 
   t.is(calls.length, 3);
