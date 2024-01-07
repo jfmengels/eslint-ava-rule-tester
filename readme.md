@@ -6,7 +6,7 @@ Allows you to run [ESLint]'s [RuleTester] with [AVA] while still getting the nic
 
 ## Install
 
-```console
+```sh
 npm install --save-dev eslint-ava-rule-tester
 ```
 
