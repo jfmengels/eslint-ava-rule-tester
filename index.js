@@ -1,37 +1,52 @@
 import {RuleTester} from 'eslint';
 
-export default function avaEslintRuleTester(test, options) {
-  let validity;
-  const indices = {};
+const generateUniqueName = (testCase, scenarioType, index) => {
+  testCase = typeof testCase === 'string' ? {code: testCase} : {...testCase};
+  testCase.name = `${scenarioType}(${index + 1}): ${testCase.name ?? testCase.code}`;
+  return testCase;
+};
 
-  RuleTester.describe = function (text, method) {
-    validity = text;
-    return method.apply(this);
-  };
+const normalizeTestCases = tests => {
+  const normalized = {...tests};
 
-  const run = testFunction => function (text, method) {
-    // TODO: When targeting Node.js 20.
-    // indices[validity] ??= 0;
+  for (const scenarioType of ['valid', 'invalid']) {
+    // https://github.com/eslint/eslint/blob/95075251fb3ce35aaf7eadbd1d0a737106c13ec6/lib/rule-tester/rule-tester.js#L510
+    if (!normalized[scenarioType]) {
+      throw new Error(`Could not find any ${scenarioType} test scenarios`);
+    }
 
-    indices[validity] = indices[validity] || 0;
+    normalized[scenarioType] = normalized[scenarioType].map((testCase, index) => generateUniqueName(testCase, scenarioType, index));
+  }
 
-    const name = `${validity}(${++indices[validity]}): ${text}`;
-    testFunction(name, t => {
-      try {
-        method();
-        t.pass();
-      } catch (error) {
-        if (error.code === 'ERR_ASSERTION' && error.operator === 'strictEqual') {
-          t.is(error.actual, error.expected, error.message);
-        }
+  return normalized;
+};
 
-        throw error;
+const run = testFunction => (title, method) => {
+  testFunction(title, t => {
+    try {
+      method();
+      t.pass();
+    } catch (error) {
+      if (error.code === 'ERR_ASSERTION' && error.operator === 'strictEqual') {
+        t.is(error.actual, error.expected, error.message);
       }
-    });
-  };
 
-  RuleTester.it = run(test);
-  RuleTester.itOnly = run(test.only);
+      throw error;
+    }
+  });
+};
 
-  return new RuleTester(options);
+class AvaRuleTester extends RuleTester {
+  constructor(test, config) {
+    super(config);
+
+    AvaRuleTester.it = run(test);
+    AvaRuleTester.itOnly = run(test.only);
+  }
+
+  run(name, rule, tests) {
+    return RuleTester.prototype.run.call(this, name, rule, normalizeTestCases(tests));
+  }
 }
+
+export default AvaRuleTester;

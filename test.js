@@ -2,8 +2,9 @@ import assert from 'node:assert';
 import test from 'ava';
 import eslintExperimentalApis from 'eslint/use-at-your-own-risk';
 import {outdent} from 'outdent';
-import avaRuleTester from './index.js';
+import AvaRuleTester from './index.js';
 
+// TODO[@fisker]: Write a simple rule instead.
 const arrowSpacing = eslintExperimentalApis.builtinRules.get('arrow-spacing');
 
 const try_ = fn => {
@@ -34,7 +35,7 @@ test('works', t => {
     onlyCalls.push([this, ...args]);
   };
 
-  const ruleTester = avaRuleTester(doTest, {
+  const ruleTester = new AvaRuleTester(doTest, {
     parserOptions: {
       ecmaVersion: '2018',
     },
@@ -147,7 +148,7 @@ test('only', t => {
     onlyCalls.push([this, ...args]);
   };
 
-  const ruleTester = avaRuleTester(doTest, {
+  const ruleTester = new AvaRuleTester(doTest, {
     parserOptions: {
       ecmaVersion: '2018',
     },
