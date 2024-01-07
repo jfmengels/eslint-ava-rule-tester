@@ -1,8 +1,8 @@
-import assert from 'assert';
+import assert from 'node:assert';
 import test from 'ava';
 import eslintExperimentalApis from 'eslint/use-at-your-own-risk';
-
-import AvaRuleTester from '.';
+import {outdent} from 'outdent';
+import AvaRuleTester from './index.js';
 
 // TODO[@fisker]: Write a simple rule instead.
 const arrowSpacing = eslintExperimentalApis.builtinRules.get('arrow-spacing');
@@ -37,26 +37,26 @@ test('works', t => {
 
   const ruleTester = new AvaRuleTester(doTest, {
     parserOptions: {
-      ecmaVersion: '2018'
-    }
+      ecmaVersion: '2018',
+    },
   });
 
   ruleTester.run('eg-rule', arrowSpacing, {
     valid: [
       '() => {}',
-      '() => {}'
+      '() => {}',
     ],
     invalid: [
       {
         code: '()=> {}',
-        errors: ['ham']
+        errors: ['ham'],
       },
       {
         code: '()=> {}',
         errors: ['Missing space before =>.'],
-        output: 'spam'
-      }
-    ]
+        output: 'spam',
+      },
+    ],
   });
 
   t.deepEqual(onlyCalls, []);
@@ -65,51 +65,73 @@ test('works', t => {
     const testCalls = [];
     const testObject = {
       pass(...args) {
-        testCalls.push([this === testObject, ...args]);
-      }
+        testCalls.push(['t.pass', ...args]);
+      },
+      is(...args) {
+        testCalls.push(['t.is', ...args]);
+      },
     };
     return {
       ctx,
       title,
       result: try_(() => fn(testObject)),
       testCalls,
-      rest
+      rest,
     };
   });
-
   const expected = [
     {
       ctx: undefined,
       title: 'valid(1): () => {}',
       result: {success: undefined},
-      testCalls: [[true]],
-      rest: []
+      testCalls: [['t.pass']],
+      rest: [],
     },
     {
       ctx: undefined,
       title: 'valid(2): () => {}',
       result: {success: undefined},
-      testCalls: [[true]],
-      rest: []
+      testCalls: [['t.pass']],
+      rest: [],
     },
     {
       ctx: undefined,
       title: 'invalid(1): ()=> {}',
       result: {
-        failure: getMessage('Missing space before =>.', 'ham')
+        failure: getMessage('Missing space before =>.', 'ham'),
       },
-      testCalls: [[true]],
-      rest: []
+      testCalls: [
+        [
+          't.is',
+          'Missing space before =>.',
+          'ham',
+          outdent`
+            Expected values to be strictly equal:
+            + actual - expected
+
+            + 'Missing space before =>.'
+            - 'ham'
+          `,
+        ],
+      ],
+      rest: [],
     },
     {
       ctx: undefined,
       title: 'invalid(2): ()=> {}',
       result: {
-        failure: 'Output is incorrect.\n\nActual:\n() => {}\n\nExpected:\nspam'
+        failure: 'Output is incorrect.',
       },
-      testCalls: [[true]],
-      rest: []
-    }
+      testCalls: [
+        [
+          't.is',
+          '() => {}',
+          'spam',
+          'Output is incorrect.',
+        ],
+      ],
+      rest: [],
+    },
   ];
 
   t.deepEqual(result, expected);
@@ -128,27 +150,27 @@ test('only', t => {
 
   const ruleTester = new AvaRuleTester(doTest, {
     parserOptions: {
-      ecmaVersion: '2018'
-    }
+      ecmaVersion: '2018',
+    },
   });
 
   ruleTester.run('eg-rule', arrowSpacing, {
     valid: [
       '() => {}',
-      '() => {}'
+      '() => {}',
     ],
     invalid: [
       {
         code: '()=> {}',
-        errors: ['ham']
+        errors: ['ham'],
       },
       {
         code: '()=> {}',
         errors: ['Missing space before =>.'],
         output: 'spam',
-        only: true
-      }
-    ]
+        only: true,
+      },
+    ],
   });
 
   t.is(calls.length, 3);
@@ -156,14 +178,21 @@ test('only', t => {
   const [, title, fn] = onlyCalls[0];
   t.is(title, 'invalid(2): ()=> {}');
 
-  const result = try_(() => fn({pass() {}}));
-  t.deepEqual(result, {failure: `
-Output is incorrect.
-
-Actual:
-() => {}
-
-Expected:
-spam
-`.trim()});
+  const testCalls = [];
+  try_(() => fn({
+    pass(...args) {
+      testCalls.push(['t.pass', ...args]);
+    },
+    is(...args) {
+      testCalls.push(['t.is', ...args]);
+    },
+  }));
+  t.deepEqual(testCalls, [
+    [
+      't.is',
+      '() => {}',
+      'spam',
+      'Output is incorrect.',
+    ],
+  ]);
 });

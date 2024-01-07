@@ -12,6 +12,7 @@
   "engines": {
     "node": ">=18"
   },
+  "type": "module",
   "scripts": {
     "lint": "xo",
     "test": "xo && ava"
@@ -29,9 +30,10 @@
     "eslint": ">=8.7.0"
   },
   "devDependencies": {
-    "ava": "^2.4.0",
+    "ava": "^6.0.1",
     "eslint": "^8.56.0",
-    "xo": "^0.25.3"
+    "outdent": "^0.8.0",
+    "xo": "^0.56.0"
   },
   "xo": {
     "space": 2

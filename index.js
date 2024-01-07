@@ -1,6 +1,4 @@
-'use strict';
-
-const {RuleTester} = require('eslint');
+import {RuleTester} from 'eslint';
 
 const generateUniqueName = (testCase, scenarioType, index) => {
   testCase = typeof testCase === 'string' ? {code: testCase} : {...testCase};
@@ -8,7 +6,7 @@ const generateUniqueName = (testCase, scenarioType, index) => {
   return testCase;
 };
 
-const normalizeTestCases = (tests) => {
+const normalizeTestCases = tests => {
   const normalized = {...tests};
 
   for (const scenarioType of ['valid', 'invalid']) {
@@ -21,18 +19,16 @@ const normalizeTestCases = (tests) => {
   }
 
   return normalized;
-}
+};
 
 const run = testFunction => (title, method) => {
   testFunction(title, t => {
-    t.pass();
-
     try {
       method();
+      t.pass();
     } catch (error) {
-      if (error.message.includes('Output is incorrect')) {
-        error.message += `\n\nActual:\n${error.actual}\n\nExpected:\n${error.expected}`;
-        // TODO: Use `t.is()`
+      if (error.code === 'ERR_ASSERTION' && error.operator === 'strictEqual') {
+        t.is(error.actual, error.expected, error.message);
       }
 
       throw error;
@@ -53,4 +49,4 @@ class AvaRuleTester extends RuleTester {
   }
 }
 
-module.exports = AvaRuleTester;
+export default AvaRuleTester;
