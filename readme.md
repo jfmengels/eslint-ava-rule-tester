@@ -1,4 +1,4 @@
-# eslint-ava-rule-tester [![Build Status](https://travis-ci.org/jfmengels/eslint-ava-rule-tester.svg?branch=master)](https://travis-ci.org/jfmengels/eslint-ava-rule-tester)
+# eslint-ava-rule-tester
 
 > [ESLint]'s [RuleTester] for [AVA]
 
@@ -6,37 +6,36 @@ Allows you to run [ESLint]'s [RuleTester] with [AVA] while still getting the nic
 
 ## Install
 
+```sh
+npm install --save-dev eslint-ava-rule-tester
 ```
-$ npm install --save-dev eslint-ava-rule-tester
-```
-
 
 ## Usage
 
-Apart from how it is instantiated, the API is the same as [ESLint]'s [RuleTester]. For information on how to test your rule, please follow the [official documentation](http://eslint.org/docs/developer-guide/working-with-plugins#testing).
+Apart from how it is instantiated, the API is the same as [ESLint]'s [RuleTester]. For information on how to test your rule, please follow the [official documentation](https://eslint.org/docs/latest/extend/plugins#testing).
 
 ```js
 import test from 'ava';
 import AvaRuleTester from 'eslint-ava-rule-tester';
-import rule from '../rules/my-awesome-rule';
+import rule from '../rules/my-awesome-rule.js';
 
 const ruleTester = new AvaRuleTester(test, {
-  env: {
-    es6: true
-  }
+  languageOptions: {
+    ecmaVersion: 2024,
+  },
 });
 
 ruleTester.run('my-awesome-rule', rule, {
   valid: [
-    '...'
+    '...',
   ],
   invalid: [
     {
       code: 'console.lgo',
       errors: [{ message: 'console.log was mistyped', column: 1, line: 1 }],
-      output: 'console.log' // Optional, use this when your rule fixes the errors
-    }
-  ]
+      output: 'console.log', // Optional, use this when your rule fixes the errors
+    },
+  ],
 });
 ```
 

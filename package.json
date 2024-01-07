@@ -13,6 +13,7 @@
     "node": ">=18"
   },
   "type": "module",
+  "exports": "./index.js",
   "scripts": {
     "lint": "xo",
     "test": "xo && ava"
